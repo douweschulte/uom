@@ -293,6 +293,13 @@ pub mod num {
     pub mod complex {
         pub use num_complex::*;
     }
+
+    #[cfg(feature = "ordered")]
+    pub mod ordered {
+        pub use ordered_float::*;
+        pub type Ordered32 = OrderedFloat<f32>;
+        pub type Ordered64 = OrderedFloat<f64>;
+    }
 }
 
 /// Primitive traits and types representing basic properties of types.
@@ -545,7 +552,7 @@ storage_types! {
     }
 
     impl crate::ConstZero for V {
-        const ZERO: Self = 0.0;
+        const ZERO: Self =  <Self as crate::num::Zero>::zero();
     }
 }
 
@@ -694,6 +701,44 @@ storage_types! {
             // number yields the original number again.
             V::new(self, 0.0)
         }
+    }
+}
+
+#[cfg(feature = "ordered")]
+storage_types! {
+    types: Ordered32, Ordered64;
+
+    impl crate::Conversion<V> for V {
+        type T = V;
+
+        #[inline(always)]
+        fn constant(op: crate::ConstantOp) -> Self::T {
+            match op {
+                crate::ConstantOp::Add => -<Self::T as crate::num::Zero>::zero(),
+                crate::ConstantOp::Sub => <Self::T as crate::num::Zero>::zero(),
+            }
+        }
+
+        #[inline(always)]
+        fn conversion(&self) -> Self::T {
+            *self
+        }
+    }
+
+    impl crate::ConversionFactor<V> for V {
+        #[inline(always)]
+        fn powi(self, e: i32) -> Self {
+            <V as crate::num::Float>::powi(self, e)
+        }
+
+        #[inline(always)]
+        fn value(self) -> V {
+            self
+        }
+    }
+
+    impl crate::ConstZero for V {
+        const ZERO: Self = OrderedFloat::new(0.0);
     }
 }
 

@@ -121,6 +121,12 @@ macro_rules! storage_types {
     (@type ($(#[$attr:meta])*) @$M:ident f64 ($($tt:tt)*)) => {
         storage_type_f64!(($(#[$attr])*) @$M ($($tt)*));
     };
+    (@type ($(#[$attr:meta])*) @$M:ident OrderedFloat<f32> ($($tt:tt)*)) => {
+        storage_type_ordered32!(($(#[$attr])*) @$M ($($tt)*));
+    };
+    (@type ($(#[$attr:meta])*) @$M:ident OrderedFloat<f64> ($($tt:tt)*)) => {
+        storage_type_ordered64!(($(#[$attr])*) @$M ($($tt)*));
+    };
     (@type ($(#[$attr:meta])*) @$M:ident All ($($tt:tt)*)) => {
         storage_types!(@type ($(#[$attr])*) @$M usize ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M u8 ($($tt)*));
@@ -142,6 +148,8 @@ macro_rules! storage_types {
         storage_types!(@type ($(#[$attr])*) @$M BigRational ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M Complex32 ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M Complex64 ($($tt)*));
+        storage_types!(@type ($(#[$attr])*) @$M OrderedFloat<f32> ($($tt)*));
+        storage_types!(@type ($(#[$attr])*) @$M OrderedFloat<f64> ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M f32 ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M f64 ($($tt)*));
     };
@@ -168,6 +176,8 @@ macro_rules! storage_types {
     (@type ($(#[$attr:meta])*) @$M:ident Float ($($tt:tt)*)) => {
         storage_types!(@type ($(#[$attr])*) @$M f32 ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M f64 ($($tt)*));
+        storage_types!(@type ($(#[$attr])*) @$M OrderedFloat<f32> ($($tt)*));
+        storage_types!(@type ($(#[$attr])*) @$M OrderedFloat<f64> ($($tt)*));
     };
     (@type ($(#[$attr:meta])*) @$M:ident Signed ($($tt:tt)*)) => {
         storage_types!(@type ($(#[$attr])*) @$M isize ($($tt)*));
@@ -181,6 +191,8 @@ macro_rules! storage_types {
         storage_types!(@type ($(#[$attr])*) @$M Rational32 ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M Rational64 ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M BigRational ($($tt)*));
+        storage_types!(@type ($(#[$attr])*) @$M OrderedFloat<f32> ($($tt)*));
+        storage_types!(@type ($(#[$attr])*) @$M OrderedFloat<f64> ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M f32 ($($tt)*));
         storage_types!(@type ($(#[$attr])*) @$M f64 ($($tt)*));
     };
@@ -268,6 +280,8 @@ storage_type_types! {
     storage_type_bigrational!("bigrational", bigrational, $crate::num::BigRational);
     storage_type_complex32!("complex32", complex32, $crate::num::complex::Complex32);
     storage_type_complex64!("complex64", complex64, $crate::num::complex::Complex64);
+    storage_type_ordered32!("ordered", ordered32, $crate::num::ordered::Ordered32);
+    storage_type_ordered64!("ordered", ordered64, $crate::num::ordered::Ordered64);
     storage_type_f32!("f32", f32, f32);
     storage_type_f64!("f64", f64, f64);
 }
